@@ -21,8 +21,8 @@ const INITIAL_DATA: AppData = {
   settings: { darkMode: true, soundNotifications: true, workoutReminders: false }
 };
 
-// NRJ Fitness Stream (HTTPS) or similar reliable high-energy stream
-const RADIO_STREAM_URL = "https://scdn.nrjaudio.fm/adwz1/mk/55659/mp3_128.mp3"; 
+// I Love Radio - Workout (High Quality HTTPS Stream)
+const RADIO_STREAM_URL = "https://streams.ilovemusic.de/iloveradio10.mp3"; 
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -107,6 +107,12 @@ const App: React.FC = () => {
       if (!audioRef.current) {
           audioRef.current = new Audio(RADIO_STREAM_URL);
           audioRef.current.preload = "none";
+          // Add error handling
+          audioRef.current.onerror = (e) => {
+              console.error("Radio Error:", e);
+              setIsRadioPlaying(false);
+              alert("Радиото моментално не е достапно. Проверете ја вашата интернет конекција.");
+          };
       }
 
       if (isRadioPlaying) {
