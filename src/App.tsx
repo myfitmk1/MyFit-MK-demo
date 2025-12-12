@@ -60,7 +60,9 @@ const App: React.FC = () => {
     document.addEventListener('keydown', handleKeyDown);
 
     const savedData = localStorage.getItem('myfit_data');
-    const auth = localStorage.getItem('myfit_auth');
+    // CHANGE: Use sessionStorage instead of localStorage for Auth
+    // This ensures that when the browser/tab closes, the session is lost.
+    const auth = sessionStorage.getItem('myfit_auth');
     
     if (savedData) {
       try {
@@ -102,13 +104,22 @@ const App: React.FC = () => {
     if (passwordInput === APP_PASSWORD) {
       vibrate();
       setIsAuthenticated(true);
-      localStorage.setItem('myfit_auth', 'true');
+      // CHANGE: Save to sessionStorage (expires on close)
+      sessionStorage.setItem('myfit_auth', 'true');
       setPasswordError(false);
     } else {
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Error vibration pattern
       setPasswordError(true);
       setPasswordInput('');
     }
+  };
+
+  const handleLogout = () => {
+      vibrate();
+      // CHANGE: Remove from sessionStorage
+      sessionStorage.removeItem('myfit_auth');
+      setIsAuthenticated(false);
+      setPasswordInput('');
   };
 
   const toggleFavorite = (id: string) => {
@@ -261,6 +272,7 @@ const App: React.FC = () => {
                     window.location.reload();
                 }
             }}
+            onLogout={handleLogout}
         />;
       default:
         return <Planner 

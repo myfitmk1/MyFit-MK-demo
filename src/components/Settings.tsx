@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AppSettings, UserProfile, ExerciseLevel } from '../types';
-import { Moon, Bell, Download, Trash2, User, ChevronRight, Shield, Share2, Phone, Mail, MessageSquare, Instagram, Facebook, Smartphone } from 'lucide-react';
+import { Moon, Bell, Download, Trash2, User, ChevronRight, Shield, Share2, Phone, Mail, MessageSquare, Instagram, Facebook, Smartphone, LogOut } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
 
 interface SettingsProps {
@@ -10,9 +10,10 @@ interface SettingsProps {
   onUpdateSettings: (s: AppSettings) => void;
   onUpdateProfile: (p: UserProfile) => void;
   onResetData: () => void;
+  onLogout: () => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings, onUpdateProfile, onResetData }) => {
+const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings, onUpdateProfile, onResetData, onLogout }) => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
 
@@ -59,9 +60,19 @@ const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-300 pb-20">
-        <header className="mb-8">
-            <h2 className="text-5xl font-heading text-white tracking-wide text-glow">ПОДЕСУВАЊА</h2>
-            <p className="text-brand-400 font-subtitle uppercase tracking-widest text-sm">ПРИЛАГОДИ ГО ТВОЕТО ИСКУСТВО</p>
+        <header className="mb-8 flex justify-between items-center">
+            <div>
+                <h2 className="text-5xl font-heading text-white tracking-wide text-glow">ПОДЕСУВАЊА</h2>
+                <p className="text-brand-400 font-subtitle uppercase tracking-widest text-sm">ПРИЛАГОДИ ГО ТВОЕТО ИСКУСТВО</p>
+            </div>
+            <button 
+                onClick={onLogout}
+                className="bg-brand-800 hover:bg-brand-700 text-white p-3 rounded-xl border border-brand-600 shadow-lg flex flex-col items-center gap-1 transition-all active:scale-95"
+                title="Одјави се / Заклучи"
+            >
+                <LogOut size={20} className="text-accent" />
+                <span className="text-[9px] font-bold uppercase">Заклучи</span>
+            </button>
         </header>
 
         {/* Profile Section */}
