@@ -63,6 +63,17 @@
         overscroll-behavior-y: none;
         background-color: #121212;
         color: #e5e5e5;
+        
+        /* Disable Text Selection Globally */
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+      }
+
+      /* Re-enable selection for inputs so users can type */
+      input, textarea {
+        -webkit-user-select: text;
+        user-select: text;
       }
       
       /* Custom scrollbar styling */
@@ -132,7 +143,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-KMJAUOZq.js"></script>
+  <script type="module" crossorigin src="./assets/index-BN0RNqCP.js"></script>
 </head>
   <body class="bg-brand-900 text-zinc-100 min-h-screen">
     <div id="root"></div>
