@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navigation from './components/Navigation';
 import Planner from './components/Planner';
 import Exercises from './components/Exercises';
@@ -9,7 +9,7 @@ import Gallery from './components/Gallery';
 import Settings from './components/Settings';
 import { View, AppData, Exercise, Routine, GalleryImage } from './types';
 import { APP_PASSWORD } from './constants';
-import { Lock, Dumbbell } from 'lucide-react';
+import { Lock, Radio, PlayCircle, PauseCircle } from 'lucide-react';
 
 const INITIAL_DATA: AppData = {
   userProfile: { name: '', level: 'Почетник', joinedDate: new Date().toISOString() },
@@ -21,6 +21,9 @@ const INITIAL_DATA: AppData = {
   settings: { darkMode: true, soundNotifications: true, workoutReminders: false }
 };
 
+// NRJ Fitness Stream (HTTPS) or similar reliable high-energy stream
+const RADIO_STREAM_URL = "https://scdn.nrjaudio.fm/adwz1/mk/55659/mp3_128.mp3"; 
+
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
@@ -29,6 +32,10 @@ const App: React.FC = () => {
 
   const [currentView, setCurrentView] = useState<View>('planner');
   const [data, setData] = useState<AppData>(INITIAL_DATA);
+  
+  // Radio State
+  const [isRadioPlaying, setIsRadioPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Transient state
   const [currentRoutine, setCurrentRoutine] = useState<Exercise[]>([]);
@@ -95,6 +102,31 @@ const App: React.FC = () => {
     }
   }, [data, loading]);
 
+  // Radio Logic
+  useEffect(() => {
+      if (!audioRef.current) {
+          audioRef.current = new Audio(RADIO_STREAM_URL);
+          audioRef.current.preload = "none";
+      }
+
+      if (isRadioPlaying) {
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+              playPromise.catch(error => {
+                  console.error("Radio playback failed:", error);
+                  setIsRadioPlaying(false);
+              });
+          }
+      } else {
+          audioRef.current.pause();
+      }
+  }, [isRadioPlaying]);
+
+  const toggleRadio = () => {
+      vibrate();
+      setIsRadioPlaying(!isRadioPlaying);
+  };
+
   const vibrate = () => {
     if (navigator.vibrate) navigator.vibrate(40);
   };
@@ -120,6 +152,7 @@ const App: React.FC = () => {
       sessionStorage.removeItem('myfit_auth');
       setIsAuthenticated(false);
       setPasswordInput('');
+      setIsRadioPlaying(false); // Stop music on logout
   };
 
   const toggleFavorite = (id: string) => {
@@ -345,14 +378,28 @@ const App: React.FC = () => {
             </div>
             
             {/* Right: Text Stack */}
-            <div className="flex flex-col items-end text-right flex-1 overflow-hidden">
+            <div className="flex flex-col items-start justify-center flex-1 overflow-hidden">
                 <h1 className="text-xl font-heading text-white leading-none tracking-wide truncate w-full text-glow">MYFIT MK</h1>
                 <p className="text-[10px] font-bold font-subtitle text-accent/80 leading-tight mt-0.5 truncate w-full uppercase">Владо Смилевски</p>
             </div>
+
+            {/* Mobile Radio Button */}
+            <button 
+                onClick={toggleRadio}
+                className={`p-2 rounded-full border transition-all ${isRadioPlaying ? 'bg-accent border-accent text-black animate-pulse shadow-[0_0_10px_rgba(255,109,0,0.5)]' : 'bg-brand-700 border-brand-600 text-brand-400'}`}
+            >
+                {isRadioPlaying ? <PauseCircle size={22} /> : <Radio size={22} />}
+            </button>
          </div>
       </header>
 
-      <Navigation currentView={currentView} onViewChange={handleViewChange} favoritesCount={data.favorites.length} />
+      <Navigation 
+        currentView={currentView} 
+        onViewChange={handleViewChange} 
+        favoritesCount={data.favorites.length}
+        isRadioPlaying={isRadioPlaying}
+        onToggleRadio={toggleRadio}
+      />
       
       <main className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto pb-24 md:pb-8 h-[calc(100vh-60px)] md:h-screen bg-brand-900 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
         <div className="max-w-7xl mx-auto h-full">

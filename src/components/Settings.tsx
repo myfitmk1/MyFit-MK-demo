@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AppSettings, UserProfile, ExerciseLevel } from '../types';
-import { Moon, Bell, Download, Trash2, User, ChevronRight, Shield, Share2, Phone, Mail, MessageSquare, Instagram, Facebook, Smartphone, LogOut } from 'lucide-react';
+import { Moon, Bell, Download, Trash2, User, ChevronRight, Shield, Share2, Phone, Mail, MessageSquare, Instagram, Facebook, Smartphone, LogOut, Sparkles } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
 
 interface SettingsProps {
@@ -67,11 +67,11 @@ const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings
             </div>
             <button 
                 onClick={onLogout}
-                className="bg-brand-800 hover:bg-brand-700 text-white p-3 rounded-xl border border-brand-600 shadow-lg flex flex-col items-center gap-1 transition-all active:scale-95"
+                className="bg-brand-800 hover:bg-brand-700 text-white p-3 rounded-xl border border-brand-600 shadow-lg flex flex-col items-center gap-1 transition-all active:scale-95 group"
                 title="Одјави се / Заклучи"
             >
-                <LogOut size={20} className="text-accent" />
-                <span className="text-[9px] font-bold uppercase">Заклучи</span>
+                <LogOut size={20} className="text-accent group-hover:scale-110 transition-transform" />
+                <span className="text-[9px] font-bold uppercase tracking-wider">ЗАКЛУЧИ</span>
             </button>
         </header>
 
@@ -268,8 +268,25 @@ const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings
                 </div>
                 
                 <h3 className="text-3xl font-heading text-white mb-1 tracking-wider text-glow">MYFIT MK</h3>
-                <p className="text-xs font-mono text-brand-500 uppercase tracking-widest mb-6">ВЕРЗИЈА 2.0.0</p>
+                <p className="text-xs font-mono text-brand-500 uppercase tracking-widest mb-6">ВЕРЗИЈА 2.2.0</p>
                 
+                {/* Changelog Description */}
+                <div className="bg-[#1a1a1a] rounded-lg p-4 border border-[#333] mb-6 text-left max-w-lg mx-auto shadow-inner">
+                    <h4 className="text-accent font-heading text-sm uppercase mb-3 tracking-widest flex items-center gap-2">
+                        <Sparkles size={14} /> ШТО Е НОВО
+                    </h4>
+                    <ul className="text-xs text-brand-300 space-y-2 font-medium">
+                        <li className="flex items-start gap-2">
+                            <span className="text-accent">•</span>
+                            <span>Додадени нови вежби 260+</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                            <span className="text-accent">•</span>
+                            <span>Додаден Radio Player за музика</span>
+                        </li>
+                    </ul>
+                </div>
+
                 <div className="bg-[#1a1a1a] rounded-lg p-6 text-sm leading-relaxed text-brand-300 border border-[#333] max-w-lg mx-auto font-medium space-y-4">
                     <p className="italic text-white">
                         "Го создадов MyFit MK со една цел да направам квалитетно фитнес знаење достапно за секој, верувам дека секој заслужува пристап до безбедни и ефективни вежби, без оглед на нивото или искуството."
@@ -280,6 +297,10 @@ const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings
                 </div>
 
                 <div className="pt-6">
+                    <div className="flex justify-center gap-4 text-xs font-mono text-brand-500 mb-2">
+                        <span className="px-2 py-1 bg-black/30 rounded border border-[#333]">260+ ВЕЖБИ</span>
+                        <span className="px-2 py-1 bg-black/30 rounded border border-[#333]">100% БЕСПЛАТНО</span>
+                    </div>
                     <p className="text-[10px] text-brand-600 uppercase tracking-widest mb-1">КРЕАТОР</p>
                     <p className="text-lg font-heading text-white flex items-center justify-center gap-2 tracking-wide">
                         <span className="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
