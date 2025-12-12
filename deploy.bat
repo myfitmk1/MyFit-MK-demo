@@ -1,10 +1,18 @@
 @echo off
 echo ==========================================
-echo      MYFIT MK - AVTOMATSKO OBJAVUVANJE
+echo      MYFIT MK - MANUALEN DEPLOY v2
 echo ==========================================
 echo.
 
-echo 1. Pravam Build na aplikacijata...
+:: 1. Проверка дали има внесен опис во командата
+IF "%~1"=="" (
+    set /p commit_msg="Vnesi opis na promenite: "
+) ELSE (
+    set commit_msg=%~1
+)
+
+echo.
+echo 1. Pravam Build (Sostavuvanje na aplikacijata)...
 call npm run build
 IF %ERRORLEVEL% NEQ 0 (
     echo [GRESKA] Build procesot ne uspea. Proverete go kodot.
@@ -13,21 +21,27 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo 2. Dodavam promeni vo Git...
+echo 2. Zacuvuvanje na kodot (Git Commit)...
 git add .
-
-echo.
-echo 3. Vnesi opis za promenite (na pr. "novi vezbi"):
-set /p commit_msg="Opis: "
-
 git commit -m "%commit_msg%"
 
 echo.
-echo 4. Prakjam na GitHub...
+echo 3. Prakjanje na kodot na GitHub (Main Branch)...
 git push origin main
 
 echo.
+echo 4. OBJAVUVANJE NA WEB (Deploy to gh-pages)...
+echo Ova e klucniot cekor...
+call npm run deploy
+IF %ERRORLEVEL% NEQ 0 (
+    echo [GRESKA] Objavuvanjeto na gh-pages ne uspea.
+    pause
+    exit /b
+)
+
+echo.
 echo ==========================================
-echo      [USPESHNO] SE E SPREMNO!
+echo      [USPESNO] WEB STRANATA E AZURIRANA!
+echo      Pocekaj 2-3 minuti za promenite da se pojavat.
 echo ==========================================
 pause
