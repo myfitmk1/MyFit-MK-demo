@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppSettings, UserProfile, ExerciseLevel } from '../types';
-import { Moon, Bell, Download, Trash2, User, ChevronRight, Shield, Share2, Phone, Mail, MessageSquare, Instagram, Facebook } from 'lucide-react';
+import { Moon, Bell, Download, Trash2, User, ChevronRight, Shield, Share2, Phone, Mail, MessageSquare, Instagram, Facebook, Smartphone } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
 
 interface SettingsProps {
@@ -13,6 +13,32 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings, onUpdateProfile, onResetData }) => {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isIOS, setIsIOS] = useState(false);
+
+  useEffect(() => {
+    // Check if device is iOS
+    const isDeviceIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    setIsIOS(isDeviceIOS);
+
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          setDeferredPrompt(null);
+        }
+      });
+    }
+  };
   
   const toggleSetting = (key: keyof AppSettings) => {
     onUpdateSettings({ ...settings, [key]: !settings[key] });
@@ -76,6 +102,36 @@ const Settings: React.FC<SettingsProps> = ({ settings, profile, onUpdateSettings
                 </div>
             </div>
         </div>
+
+        {/* Install App Section */}
+        {(deferredPrompt || isIOS) && (
+            <div className="metal-card rounded-xl border border-accent/50 p-6 relative group overflow-hidden bg-gradient-to-r from-accent/10 to-transparent">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-accent text-black flex items-center justify-center shadow-lg shadow-accent/30">
+                        <Smartphone size={24} />
+                    </div>
+                    <div className="flex-1">
+                        <h3 className="text-xl font-heading text-white tracking-wide">ИНСТАЛИРАЈ АПЛИКАЦИЈА</h3>
+                        <p className="text-xs text-brand-400 font-mono">ЗА БРЗ ПРИСТАП ОД ПОЧЕТЕН ЕКРАН</p>
+                    </div>
+                    {deferredPrompt && (
+                        <button 
+                            onClick={handleInstallClick}
+                            className="px-6 py-3 bg-accent hover:bg-accent-hover text-black font-heading tracking-wide rounded-lg shadow-lg active:scale-95 transition-all"
+                        >
+                            ИНСТАЛИРАЈ
+                        </button>
+                    )}
+                </div>
+                {isIOS && (
+                    <div className="mt-4 p-3 bg-black/40 rounded border border-[#333] text-xs text-brand-300">
+                        <p className="mb-1 font-bold text-white">ЗА IPHONE (iOS):</p>
+                        <p>1. Кликнете на <strong>Share</strong> иконата (квадрат со стрелка нагоре).</p>
+                        <p>2. Изберете <strong>"Add to Home Screen"</strong>.</p>
+                    </div>
+                )}
+            </div>
+        )}
 
         {/* Contact & Support Section */}
         <div className="metal-card rounded-xl border border-[#333] p-6 relative group overflow-hidden">

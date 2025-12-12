@@ -63,6 +63,17 @@
         overscroll-behavior-y: none;
         background-color: #121212;
         color: #e5e5e5;
+        
+        /* Disable Text Selection Globally */
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+      }
+
+      /* Re-enable selection for inputs so users can type */
+      input, textarea {
+        -webkit-user-select: text;
+        user-select: text;
       }
       
       /* Custom scrollbar styling */

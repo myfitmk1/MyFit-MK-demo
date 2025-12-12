@@ -33,11 +33,32 @@ const App: React.FC = () => {
   // Transient state
   const [currentRoutine, setCurrentRoutine] = useState<Exercise[]>([]);
 
-  // Load Data
+  // Load Data & Security Protocols
   useEffect(() => {
     // Force dark mode class on body
     document.body.classList.add('dark');
     
+    // Security: Prevent Right Click
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    // Security: Prevent Shortcuts (F12, Ctrl+Shift+I, Ctrl+U, etc.)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+        (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+        (e.ctrlKey && e.key === 'u') ||
+        (e.ctrlKey && e.key === 'U')
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+
     const savedData = localStorage.getItem('myfit_data');
     const auth = localStorage.getItem('myfit_auth');
     
@@ -57,6 +78,12 @@ const App: React.FC = () => {
     }
     
     setTimeout(() => setLoading(false), 800);
+
+    // Cleanup listeners
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   // Save Data
@@ -302,7 +329,7 @@ const App: React.FC = () => {
          <div className="flex items-center gap-3 w-full">
             {/* Left: Logo */}
             <div className="w-10 h-10 bg-brand-700 rounded-lg flex items-center justify-center text-accent border border-brand-600 shadow-md flex-shrink-0 overflow-hidden">
-                <img src="myfitmklogo.jpg" alt="Logo" className="w-full h-full object-cover" />
+                <img src="/myfitmklogo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
             
             {/* Right: Text Stack */}
