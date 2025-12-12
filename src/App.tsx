@@ -380,7 +380,7 @@ const App: React.FC = () => {
          <div className="flex items-center gap-3 w-full">
             {/* Left: Logo */}
             <div className="w-10 h-10 bg-brand-700 rounded-lg flex items-center justify-center text-accent border border-brand-600 shadow-md flex-shrink-0 overflow-hidden">
-                <img src="/myfitmklogo.jpg" alt="Logo" className="w-full h-full object-cover" />
+                <img src="myfitmklogo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
             
             {/* Right: Text Stack */}

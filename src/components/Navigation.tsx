@@ -22,7 +22,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, onViewChange, favo
             <div className="flex items-center gap-4">
                 {/* Logo Image */}
                 <div className="w-16 h-16 bg-gradient-to-br from-brand-700 to-brand-800 rounded-xl flex items-center justify-center text-accent border border-brand-600 shadow-lg shadow-black/40 flex-shrink-0 overflow-hidden">
-                    <img src="/myfitmklogo.jpg" alt="MyFit MK" className="w-full h-full object-cover" />
+                    <img src="myfitmklogo.jpg" alt="MyFit MK" className="w-full h-full object-cover" />
                 </div>
                 
                 {/* Title Block */}
